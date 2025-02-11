@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 3 - Coding Lesson: Implementing Batch Gradient Descent in Python</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            font-size: 150%;
+        }
+        section {
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in;
+        }
+        h1, h2, h3, h4 {
+            color: #333;
+            margin-top: 20px;
+        }
+        p, li {
+            line-height: 1.6;
+            color: #444;
+            margin-bottom: 20px;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        .image-placeholder, .interactive-placeholder, .continue-button, .vocab-section, .why-it-matters, .test-your-knowledge, .faq-section, .stop-and-think {
+            text-align: left;
+        }
+        .image-placeholder img, .interactive-placeholder img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .vocab-section, .why-it-matters, .test-your-knowledge, .faq-section, .stop-and-think {
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .vocab-section {
+            background-color: #f0f8ff;
+        }
+        .vocab-section h3 {
+            color: #1e90ff;
+            font-size: 0.75em;
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
+        .vocab-section h4 {
+            color: #000;
+            font-size: 0.9em;
+            margin-top: 10px;
+            margin-bottom: 8px;
+        }
+        .vocab-term {
+            font-weight: bold;
+            color: #1e90ff;
+        }
+        .why-it-matters {
+            background-color: #ffe6f0;
+        }
+        .why-it-matters h3 {
+            color: #d81b60;
+            font-size: 0.75em;
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
+        .stop-and-think {
+            background-color: #e6e6ff;
+        }
+        .stop-and-think h3 {
+            color: #4b0082;
+            font-size: 0.75em;
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
+        .continue-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 15px;
+            color: #ffffff;
+            background-color: #007bff;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .reveal-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 15px;
+            color: #ffffff;
+            background-color: #4b0082;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .test-your-knowledge {
+            background-color: #e6ffe6;
+        }
+        .test-your-knowledge h3 {
+            color: #28a745;
+            font-size: 0.75em;
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
+        .test-your-knowledge h4 {
+            color: #000;
+            font-size: 0.9em;
+            margin-top: 10px;
+            margin-bottom: 8px;
+        }
+        .test-your-knowledge p {
+            margin-bottom: 15px;
+        }
+        .check-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 15px;
+            color: #ffffff;
+            background-color: #28a745;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            font-size: 1em;
+        }
+        .faq-section {
+            background-color: #fffbea;
+        }
+        .faq-section h3 {
+            color: #ffcc00;
+            font-size: 0.75em;
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
+        .faq-section h4 {
+            color: #000;
+            font-size: 0.9em;
+            margin-top: 10px;
+            margin-bottom: 8px;
+        }
+        pre {
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            border-left: 3px solid #007bff;
+            color: #666;
+            page-break-inside: avoid;
+            font-family: monospace;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 1.6em;
+            max-width: 100%;
+            overflow: auto;
+            padding: 1em 1.5em;
+            display: block;
+            word-wrap: break-word;
+        }
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <section id="section1">
+        <h1>Lesson 3 - Coding Lesson: Implementing Batch Gradient Descent in Python</h1>
+        <div class="image-placeholder">
+            <img src="/placeholder.svg?height=300&width=600" alt="Image of a person coding on a laptop with a focused expression, symbolizing the hands-on coding activity.">
+        </div>
+        <p>Code warriors, are you ready to bring Gradient Descent to life with your own code? 💻 In this coding lesson, we're going to translate the Batch Gradient Descent algorithm into practical Python code! You'll be using Jupyter Notebook or Google Colab to write and run your code, implementing each step of the algorithm from scratch. Let's get coding and see Gradient Descent learn!</p>
+        <div class="continue-button" onclick="showNextSection(2)">Continue</div>
+    </section>
+
+    <section id="section2">
+        <h2>Setting Up Your Coding Environment</h2>
+        <p>First, let's make sure you have your coding environment ready. We'll be using Python with a couple of essential libraries.</p>
+        <p><strong>Environment:</strong> We recommend using either <strong>Jupyter Notebook</strong> or <strong>Google Colab</strong>. If you don't have them set up yet, follow these quick instructions:</p>
+        <ul>
+            <li><strong>Jupyter Notebook:</strong> If you have Anaconda Python installed, Jupyter Notebook is likely already installed. Just open your Anaconda Prompt or Terminal and type <code>jupyter notebook</code> and press Enter. This will open Jupyter in your web browser.</li>
+            <li><strong>Google Colab:</strong> If you prefer not to install anything locally, Google Colab is a fantastic option! Just go to <a href="https://colab.research.google.com" target="_blank">colab.research.google.com</a> in your web browser and sign in with your Google account. You're ready to code!</li>
+        </ul>
+        <p><strong>Libraries:</strong> We'll be using two main Python libraries:</p>
+        <ul>
+            <li><strong>NumPy:</strong> For numerical operations and array manipulation. It's a cornerstone of scientific computing in Python.</li>
+            <li><strong>Matplotlib:</strong> For plotting graphs and visualizing our results. We'll use it to see the cost function decreasing and to plot our learned regression line.</li>
+        </ul>
+        <pre><code>import numpy as np
+import matplotlib.pyplot as plt</code></pre>
+        <p><strong>Import Libraries:</strong> In a new Jupyter Notebook or Colab notebook cell, type the code above and run the cell (Shift+Enter or Ctrl+Enter). This imports the libraries we'll need.</p>
+        <div class="continue-button" onclick="showNextSection(3)">Continue</div>
+    </section>
+
+    <section id="section3">
+        <h2>Step 1: Generate Synthetic Data</h2>
+        <p>To test our Batch Gradient Descent implementation, let's create some synthetic data for linear regression. This way, we know the 'true' relationship and can see if our algorithm learns it correctly.</p>
+        <pre><code># Generate synthetic data for linear regression
+np.random.seed(0) # for reproducibility
+X = 2 * np.random.rand(100, 1) # 100 random x values between 0 and 2
+y = 4 + 3 * X + np.random.randn(100, 1) # y = 4 + 3x + some noise
+
+# Plot the data
+plt.scatter(X, y)
+plt.xlabel("X")
+plt.ylabel("y")
+plt.title("Synthetic Linear Regression Data")
+plt.show()</code></pre>
+        <p><strong>Generate and Plot Data:</strong> Copy and paste the code above into a new cell in your notebook and run it. This code does the following:</p>
+        <ul>
+            <li><code>np.random.seed(0)</code>: Sets a random seed so your data generation is the same as shown here (for reproducibility).</li>
+            <li><code>X = 2 * np.random.rand(100, 1)</code>: Creates 100 random x values between 0 and 2. We reshape it to be a column vector (100 rows, 1 column).</li>
+            <li><code>y = 4 + 3 * X + np.random.randn(100, 1)</code>: Creates corresponding y values based on a linear relationship (y = 4 + 3x) and adds some random noise (<code>np.random.randn</code>) to make it more realistic.</li>
+            <li><code>plt.scatter(X, y)</code>: Creates a scatter plot of your generated data so you can visualize it.</li>
+        </ul>
+        <p>You should see a scatter plot of points that generally follow a linear trend, but with some random scatter around the line. This is the data our Batch Gradient Descent will learn to fit a line to!</p>
+        <div class="image-placeholder">
+            <img src="/placeholder.svg?height=300&width=600" alt="Expected output plot: A scatter plot of 100 data points, showing a generally linear trend with random scatter around a line.">
+        </div>
+        <div class="continue-button" onclick="showNextSection(4)">Continue</div>
+    </section>
+
+    <section id="section4">
+        <h2>Step 2: Implement the MSE Cost Function</h2>
+        <p>Now, let's code our Mean Squared Error (MSE) cost function. This function will measure how well our model is currently fitting the data.</p>
+        <pre><code>def calculate_mse(y_true, y_predicted):
+    """Calculates the Mean Squared Error."""
+    n = len(y_true)
+    mse = (1 / (2 * n)) * np.sum((y_true - y_predicted)**2)
+    return mse</code></pre>
+        <p><strong>Implement <code>calculate_mse</code> Function:</strong> Copy and paste this Python function into a new cell and run it. This function takes two arguments:</p>
+        <ul>
+            <li><code>y_true</code>: The actual (true) y values from our dataset.</li>
+            <li><code>y_predicted</code>: The y values predicted by our linear regression model.</li>
+        </ul>
+        <p>It then calculates the MSE using the formula we discussed and returns the calculated MSE value.</p>
+        <p>We'll use this function in each iteration of Gradient Descent to track how our cost function is decreasing as our model learns!</p>
+        <div class="continue-button" onclick="showNextSection(5)">Continue</div>
+    </section>
+
+    <section id="section5">
+        <h2>Step 3: Implement the Gradient Calculation Function</h2>
+        <p>Next, we need to code the function that calculates the gradients of the MSE cost function. This function will tell us the 'downhill' direction for our parameters.</p>
+        <pre><code>def calculate_gradients(X, y_true, y_predicted):
+    """Calculates gradients of MSE cost function."""
+    n = len(y_true)
+    errors = y_predicted - y_true
+    gradient_beta0 = (1 / n) * np.sum(errors) # Gradient for intercept (beta_0)
+    gradient_beta1 = (1 / n) * np.sum(X * errors) # Gradient for slope (beta_1)
+    return gradient_beta0, gradient_beta1</code></pre>
+        <p><strong>Implement <code>calculate_gradients</code> Function:</strong> Copy and paste this Python function into a new cell and run it. This function takes three arguments:</p>
+        <ul>
+            <li><code>X</code>: The input features (x values).</li>
+            <li><code>y_true</code>: The actual y values.</li>
+            <li><code>y_predicted</code>: The y values predicted by our model.</li>
+        </ul>
+        <p>It then calculates the gradients for both <code>beta_0</code> (intercept) and <code>beta_1</code> (slope) using the formulas we derived and returns these two gradient values.</p>
+        <p>This function is the 'compass' of our Gradient Descent algorithm, telling us which direction to adjust our parameters in!</p>
+        <div class="continue-button" onclick="showNextSection(6)">Continue</div>
+    </section>
+
+    <section id="section6">
+        <h2>Step 4: Implement Batch Gradient Descent Function</h2>
+        <p>Now, the main event! Let's implement the <code>batch_gradient_descent</code> function that orchestrates the entire algorithm.</p>
+        <pre><code>def batch_gradient_descent(X, y, learning_rate, n_iterations):
+    """Implements Batch Gradient Descent for linear regression."""
+    beta_0 = 0  # Initialize intercept to 0
+    beta_1 = 0  # Initialize slope to 0
+    history_cost = [] # To store cost values at each iteration
+
+    for iteration in range(n_iterations):
+        # 1. Make predictions using current parameters
+        y_predicted = beta_0 + beta_1 * X
+
+        # 2. Calculate the cost (MSE)
+        cost = calculate_mse(y, y_predicted)
+
+        # 3. Calculate gradients
+        gradient_beta0, gradient_beta1 = calculate_gradients(X, y, y_predicted)
+
+        # 4. Update parameters using gradients and learning rate
+        beta_0 = beta_0 - learning_rate * gradient_beta0
+        beta_1 = beta_1 - learning_rate * gradient_beta1
+
+        # Store cost for plotting later
+        history_cost.append(cost)
+
+    return beta_0, beta_1, history_cost</code></pre>
+        <p><strong>Implement <code>batch_gradient_descent</code> Function:</strong> Copy and paste this function into a new cell and run it. This function embodies the Batch Gradient Descent algorithm. Let's break down what it does:</p>
+        <ul>
+            <li><strong>Initialization:</strong> It initializes <code>beta_0</code> and <code>beta_1</code> to 0 and creates an empty list <code>history_cost</code> to store the cost function values at each iteration.</li>
+            <li><strong>Iteration Loop:</strong> It then loops for <code>n_iterations</code> (the maximum number of iterations we set).
+                <ul>
+                    <li><strong>Predictions:</strong> In each iteration, it calculates the predicted y values (<code>y_predicted</code>) using the current <code>beta_0</code> and <code>beta_1</code>.</li>
+                    <li><strong>Cost Calculation:</strong> It calculates the MSE cost using the <code>calculate_mse</code> function.</li>
+                    <li><strong>Gradient Calculation:</strong> It calculates the gradients using the <code>calculate_gradients</code> function.</li>
+                    <li><strong>Parameter Update:</strong> It updates <code>beta_0</code> and <code>beta_1</code> by subtracting the learning rate times their respective gradients – this is the core Gradient Descent step!</li>
+                    <li><strong>Cost History:</strong> It stores the calculated cost in the <code>history_cost</code> list.</li>
+                </ul>
+            </li>
+            <li><strong>Return Values:</strong> After the loop finishes, it returns the learned <code>beta_0</code> and <code>beta_1</code> values and the <code>history_cost</code> list.</li>
+        </ul>
+        <p>This function is our Gradient Descent 'engine'! Now, let's run it and see it learn!</p>
+        <div class="continue-button" onclick="showNextSection(7)">Continue</div>
+    </section>
+
+    <section id="section7">
+        <h2>Step 5: Run Gradient Descent and Visualize Results</h2>
+        <p>Time to put everything together, run our Batch Gradient Descent, and see the results!</p>
+        <pre><code># Set hyperparameters
+learning_rate = 0.01
+n_iterations = 100
+
+# Run Batch Gradient Descent
+learned_beta0, learned_beta1, cost_history = batch_gradient_descent(X, y, learning_rate, n_iterations)
+
+print(f"Learned Intercept (beta_0): {learned_beta0:.2f}")
+print(f"Learned Slope (beta_1): {learned_beta1:.2f}")
+
+# Plot Cost History
+plt.plot(range(n_iterations), cost_history)
+plt.xlabel("Iteration")
+plt.ylabel("MSE Cost")
+plt.title("Cost Function over Iterations")
+plt.show()
+
+# Plot Regression Line
+x_line = np.linspace(0, 2, 100).reshape(-1, 1) # Create x values for line
+y_line = learned_beta0 + learned_beta1 * x_line # Calculate predicted y values
+
+plt.scatter(X, y, label="Data Points") # Plot original data
+plt.plot(x_line, y_line, color='red', label="Regression Line") # Plot learned regression line
+plt.xlabel("X")
+plt.ylabel("y")
+plt.title("Linear Regression with Batch Gradient Descent")
+plt.legend()
+plt.show()</code></pre>
+        <p><strong>Run and Visualize:</strong> Copy and paste this final code block into a new cell and run it. This code:</p>
+        <ul>
+            <li><strong>Sets Hyperparameters:</strong> Sets the <code>learning_rate</code> to 0.01 and <code>n_iterations</code> to 100 (you can experiment with these later!).</li>
+            <li><strong>Runs Batch Gradient Descent:</strong> Calls the <code>batch_gradient_descent</code> function we implemented, getting back the <code>learned_beta0</code>, <code>learned_beta1</code>, and <code>cost_history</code>.</li>
+            <li><strong>Prints Learned Parameters:</strong> Prints the learned intercept and slope values.</li>
+            <li><strong>Plots Cost History:</strong> Creates a line plot showing how the MSE cost function decreased over iterations. You should see a downward trend!</li>
+            <li><strong>Plots Regression Line:</strong> Creates a scatter plot of the original data and overlays the learned linear regression line (using the learned <code>beta_0</code> and <code>beta_1</code>). You should see the red line fitting the data points reasonably well.</li>
+        </ul>
+        <p>Take a look at the plots and the printed parameters! You've just implemented Batch Gradient Descent and seen it learn a linear relationship from data!</p>
+        <div class="image-placeholder">
+            <img src="/placeholder.svg?height=300&width=600" alt="Expected output plots: (1) Cost function plot showing a decreasing trend over iterations. (2) Scatter plot of data points with a red regression line fitting them.">
+        </div>
+        <div class="continue-button" onclick="showNextSection(8)">Continue</div>
+    </section>
+
+    <section id="section8">
+        <h2>Reflection and Experimentation</h2>
+        <p>Congratulations, coder! You've built a working Batch Gradient Descent algorithm. Now, let's reflect and experiment!</p>
+        <div class="stop-and-think">
+            <h3>Stop and Think</h3>
+            <h4>Look at the 'Cost Function over Iterations' plot. Does the cost function always decrease with each iteration? Is it decreasing smoothly or erratically? What does this tell you about the convergence of Batch Gradient Descent?</h4>
+            <button class="reveal-button" onclick="revealAnswer('stop-and-think-1')">Reveal</button>
+            <p id="stop-and-think-1" style="display: none;">Ideally, you should see the cost function decreasing with each iteration, indicating that Gradient Descent is successfully minimizing the error. Batch GD typically exhibits a smoother, more consistent descent compared to SGD because it uses the full dataset for gradient calculation.</p>
+        </div>
+        <h3>Experiment Tasks</h3>
+        <ol>
+            <li><strong>Experiment with Learning Rate:</strong> Try changing the <code>learning_rate</code> value (e.g., to 0.1, 0.001, 1.0). Rerun the code for each learning rate. Observe how the cost history plot changes and how the learned regression line is affected. What learning rate seems to work best? What happens with a very large learning rate?</li>
+            <li><strong>Experiment with Number of Iterations:</strong> Change the <code>n_iterations</code> value (e.g., to 10, 50, 500). Rerun the code. Observe how the cost history changes and if the learned regression line improves with more iterations (up to a point).</li>
+            <li><strong>Try Different Initializations:</strong> Modify the <code>batch_gradient_descent</code> function to initialize <code>beta_0</code> and <code>beta_1</code> to different values (e.g., random values using <code>np.random.rand()</code>). Does this significantly change the final learned parameters or the convergence behavior for this simple linear regression problem?</li>
+        </ol>
+        <div class="continue-button" onclick="showNextSection(9)">Continue</div>
+    </section>
+
+    <section id="section9">
+        <h2>Coding Lesson Complete - Batch GD Master!</h2>
+        <p>Amazing work, Batch Gradient Descent coder! 🚀 You've successfully implemented Batch Gradient Descent in Python and experimented with its hyperparameters. You've now bridged the gap between theory and practice and have a hands-on understanding of this fundamental algorithm. Share your code, plots, and experimental findings in the course forum and get ready for even more optimization adventures!</p>
+    </section>
+
+    <script>
+        // Show the first section initially
+        document.getElementById("section1").style.display = "block";
+        document.getElementById("section1").style.opacity = "1";
+
+        function showNextSection(nextSectionId) {
+            const currentButton = event.target;
+            const nextSection = document.getElementById("section" + nextSectionId);
+            
+            currentButton.style.display = "none";
+            
+            nextSection.style.display = "block";
+            setTimeout(() => {
+                nextSection.style.opacity = "1";
+            }, 10);
+
+            setTimeout(() => {
+                nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 500);
+        }
+
+        function revealAnswer(id) {
+            const revealText = document.getElementById(id);
+            const revealButton = event.target;
+            
+            revealText.style.display = "block";
+            revealButton.style.display = "none";
+        }
+    </script>
+</body>
+</html>
